@@ -1,31 +1,28 @@
 import { useState, useEffect, useRef } from "react";
 
 export default function useNavbarScroll() {
-  const [isScrolling, setIsScrolling] = useState(false);
-  const scrollTimeoutRef = useRef(null);
+  const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+        setIsHidden(true);
+      } else {
+        setIsHidden(false);
       }
 
-      setIsScrolling(true);
-
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 150);
+      lastScrollY.current = currentScrollY;
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
     };
   }, []);
 
-  return isScrolling;
+  return isHidden;
 }

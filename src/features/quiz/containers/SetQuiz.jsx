@@ -53,7 +53,7 @@ export default function SetQuiz() {
         <main className="max-w-2xl mx-auto px-4 pb-12 pt-24 md:pt-32">
           <div className="text-center mb-6 md:mb-8">
             <h2 className="text-3xl md:text-5xl font-black text-sky-500 mb-2 tracking-tighter">
-              Setup Quiz
+              Setup QuiSip
             </h2>
             <p className="text-gray-500 font-medium text-sm md:text-base">
               Custom kuis sesukamu, gas main!
