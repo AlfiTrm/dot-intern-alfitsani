@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useToast } from "../../../shared/components/Toast";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
+import DarkVeil from "../components/DarkVeil";
 import useAuth from "../hooks/useAuth";
 
 export default function AuthScreen() {
@@ -16,7 +17,7 @@ export default function AuthScreen() {
     const result = login(identifier, password);
     if (result.success) {
       showToast("Login berhasil! Mengalihkan...", "success", 2000);
-      setTimeout(() => navigate("/quiz"), 2000);
+      setTimeout(() => navigate("/setup"), 2000);
     } else {
       showToast(result.error, "error", 3000);
     }
@@ -36,59 +37,75 @@ export default function AuthScreen() {
 
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-sky-500 to-sky-600 p-12 flex-col justify-between">
-        <div>
-          <h1 className="text-4xl font-bold text-white">QuiSip</h1>
-          <p className="text-sky-100 mt-2">Gas tes pemahamanmu!</p>
+      <div className="hidden lg:flex lg:w-1/2 bg-black relative overflow-hidden flex-col justify-between p-12">
+        <div className="absolute inset-0 z-0">
+          <DarkVeil hueShift={7} />
         </div>
 
-        <div className="text-white">
-          <h2 className="text-3xl font-bold mb-4">
-            Siap untuk menguji pengetahuanmu?
-          </h2>
-          <p className="text-sky-100 text-lg">
-            Jawab pertanyaan dari berbagai kategori dan lihat seberapa pintar
-            kamu!
+        <div className="relative z-10 pointer-events-none">
+          <p className="text-gray-400 font-medium tracking-widest uppercase text-sm border-l-2 border-primary pl-3">
+            Platform Kuis
           </p>
         </div>
 
-        <p className="text-sky-200 text-sm">intern dot - alfitsani</p>
+        <div className="relative z-10 text-white pointer-events-none">
+          <h1 className="text-9xl font-black text-white tracking-tighter mb-6">
+            QuiSip
+          </h1>
+          <h2 className="text-xl font-bold text-white">
+            Asah otak dan raih skor tertinggi.
+          </h2>
+          <p className="text-gray-400 text-md opacity-90 max-w-lg">
+            Tantang dirimu dengan ribuan pertanyaan seru dari berbagai kategori.
+          </p>
+        </div>
+
+        <p className="relative z-10 text-gray-500 text-sm font-medium pointer-events-none flex items-center gap-2">
+          Dot Intern - alfitsani
+        </p>
       </div>
 
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-md">
-          <div className="lg:hidden mb-8 text-center">
-            <h1 className="text-3xl font-bold text-sky-500">QuiSip</h1>
-            <p className="text-gray-500 mt-1">Gas tes pemahamanmu!</p>
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 bg-gray-50/50">
+        <div className="w-full max-w-md bg-white p-6 md:p-10 rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
+          <div className="text-center mb-5 md:mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-primary mb-1 md:mb-2 tracking-tight">
+              {isLogin ? "Masuk" : "Daftar"}
+            </h2>
+            <p className="text-gray-500 text-sm md:text-base">
+              {isLogin
+                ? "Masuk kembali ke akun QuiSip kamu"
+                : "Mulai perjalanan kuis sekarang"}
+            </p>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            {isLogin ? "Selamat Datang!" : "Buat Akun"}
-          </h2>
-          <p className="text-gray-500 mb-6">
-            {isLogin ? "Masuk untuk mulai kuis" : "Daftar untuk mulai kuis"}
-          </p>
-
           <AnimatePresence mode="wait">
-            <motion.div
-              key={isLogin ? "login" : "register"}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
-            >
-              {isLogin ? (
+            {isLogin ? (
+              <motion.div
+                key="login"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.2 }}
+              >
                 <LoginForm
                   onSubmit={handleLogin}
                   onSwitchToRegister={() => setIsLogin(false)}
                 />
-              ) : (
+              </motion.div>
+            ) : (
+              <motion.div
+                key="register"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+              >
                 <RegisterForm
                   onSubmit={handleRegister}
                   onSwitchToLogin={() => setIsLogin(true)}
                 />
-              )}
-            </motion.div>
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
       </div>
