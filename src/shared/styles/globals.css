@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #0ea5e9;
+  --secondary: #64748b;
+  --accent: #8b5cf6;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --border: #e2e8f0;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.container-sm { max-width: 640px; }
+.container-md { max-width: 768px; }
