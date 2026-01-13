@@ -1,6 +1,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, AlertTriangle, Info, CheckCircle } from "lucide-react";
+import { X } from "lucide-react";
+import { MODAL_VARIANTS } from "../constants/modalVariants";
 
 export default function Modal({
   isOpen,
@@ -14,26 +15,8 @@ export default function Modal({
 }) {
   if (!isOpen) return null;
 
-  const variants = {
-    danger: {
-      icon: <AlertTriangle className="w-12 h-12 text-red-500" />,
-      confirmClass: "bg-red-500 hover:bg-red-600 text-white",
-    },
-    success: {
-      icon: <CheckCircle className="w-12 h-12 text-green-500" />,
-      confirmClass: "bg-green-500 hover:bg-green-600 text-white",
-    },
-    info: {
-      icon: <Info className="w-12 h-12 text-sky-500" />,
-      confirmClass: "bg-sky-500 hover:bg-sky-600 text-white",
-    },
-    default: {
-      icon: null,
-      confirmClass: "bg-sky-500 hover:bg-sky-600 text-white",
-    },
-  };
-
-  const config = variants[variant] || variants.default;
+  const config = MODAL_VARIANTS[variant] || MODAL_VARIANTS.default;
+  const IconComponent = config.icon;
 
   return (
     <AnimatePresence>
@@ -59,8 +42,10 @@ export default function Modal({
           </button>
 
           <div className="text-center">
-            {config.icon && (
-              <div className="flex justify-center mb-4">{config.icon}</div>
+            {IconComponent && (
+              <div className="flex justify-center mb-4">
+                <IconComponent className={`w-12 h-12 ${config.iconColor}`} />
+              </div>
             )}
 
             <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>

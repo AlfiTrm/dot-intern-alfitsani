@@ -12,9 +12,6 @@ export default function AutoNextIndicator({ duration = 1.5 }) {
           className="h-full bg-sky-500 rounded-full"
         />
       </div>
-      <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">
-        Pertanyaan Selanjutnya...
-      </span>
     </div>
   );
 }

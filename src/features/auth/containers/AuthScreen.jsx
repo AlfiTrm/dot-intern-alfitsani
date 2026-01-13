@@ -1,39 +1,18 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useToast } from "../../../shared/components/Toast";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 import DarkVeil from "../components/DarkVeil";
-import useAuth from "../hooks/useAuth";
+import useAuthScreen from "../hooks/useAuthScreen";
 
 export default function AuthScreen() {
-  const [isLogin, setIsLogin] = useState(true);
-  const { login, register } = useAuth();
-  const navigate = useNavigate();
-  const { showToast } = useToast();
-
-  const handleLogin = async (identifier, password) => {
-    const result = login(identifier, password);
-    if (result.success) {
-      showToast("Login berhasil! Mengalihkan...", "success", 2000);
-      setTimeout(() => navigate("/setup"), 2000);
-    } else {
-      showToast(result.error, "error", 3000);
-    }
-    return result;
-  };
-
-  const handleRegister = async (username, email, password) => {
-    const result = register(username, email, password);
-    if (result.success) {
-      showToast("Akun berhasil dibuat! Silakan masuk.", "success", 2000);
-      setTimeout(() => setIsLogin(true), 2000);
-    } else {
-      showToast(result.error, "error", 3000);
-    }
-    return result;
-  };
+  const {
+    isLogin,
+    handleLogin,
+    handleRegister,
+    switchToLogin,
+    switchToRegister,
+  } = useAuthScreen();
 
   return (
     <div className="min-h-screen flex">
@@ -89,7 +68,7 @@ export default function AuthScreen() {
               >
                 <LoginForm
                   onSubmit={handleLogin}
-                  onSwitchToRegister={() => setIsLogin(false)}
+                  onSwitchToRegister={switchToRegister}
                 />
               </motion.div>
             ) : (
@@ -102,7 +81,7 @@ export default function AuthScreen() {
               >
                 <RegisterForm
                   onSubmit={handleRegister}
-                  onSwitchToLogin={() => setIsLogin(true)}
+                  onSwitchToLogin={switchToLogin}
                 />
               </motion.div>
             )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Play, AlertCircle } from "lucide-react";
 import Navbar from "../../../shared/components/Navbar";
 import Button from "../../../shared/components/Button";
@@ -10,7 +10,9 @@ import {
   TypeSelector,
 } from "../components/setup";
 import useSetQuiz from "../hooks/useSetQuiz";
+import useResumeTimer from "../hooks/useResumeTimer";
 import GridMotion from "../components/GridMotion";
+import { formatTime } from "../utils";
 
 export default function SetQuiz() {
   const {
@@ -25,30 +27,8 @@ export default function SetQuiz() {
     cancelQuiz,
   } = useSetQuiz();
 
-  const [resumeTime, setResumeTime] = useState(0);
+  const resumeTime = useResumeTimer(activeQuiz);
   const [showResetModal, setShowResetModal] = useState(false);
-
-  useEffect(() => {
-    if (activeQuiz?.remainingTime) {
-      setResumeTime(activeQuiz.remainingTime);
-    }
-  }, [activeQuiz?.remainingTime]);
-
-  useEffect(() => {
-    if (!activeQuiz || resumeTime <= 0) return;
-
-    const interval = setInterval(() => {
-      setResumeTime((prev) => Math.max(0, prev - 1));
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [activeQuiz, resumeTime]);
-
-  const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}m ${s}s`;
-  };
 
   const handleCreateNew = () => {
     setShowResetModal(true);

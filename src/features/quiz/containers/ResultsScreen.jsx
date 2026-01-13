@@ -1,55 +1,22 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { RefreshCw } from "lucide-react";
-import confetti from "canvas-confetti";
 import Navbar from "../../../shared/components/Navbar";
 import { ScoreCard, AnswerReview } from "../components/summary";
 import useResults from "../hooks/useResults";
+import useConfetti from "../hooks/useConfetti";
 import Spinner from "../../../shared/components/Spinner";
 import Button from "../../../shared/components/Button";
 import GridMotion from "../components/GridMotion";
+import { getResultTheme } from "../utils";
 
 export default function ResultsScreen() {
   const { result, handlePlayAgain } = useResults();
 
-  useEffect(() => {
-    if (result) {
-      const percentage = (result.score / result.total) * 100;
+  const percentage = result
+    ? Math.round((result.score / result.total) * 100)
+    : 0;
 
-      if (percentage >= 70) {
-        const duration = 3 * 1000;
-        const animationEnd = Date.now() + duration;
-        const defaults = {
-          startVelocity: 30,
-          spread: 360,
-          ticks: 60,
-          zIndex: 0,
-        };
-
-        const randomInRange = (min, max) => Math.random() * (max - min) + min;
-
-        const interval = setInterval(() => {
-          const timeLeft = animationEnd - Date.now();
-
-          if (timeLeft <= 0) {
-            return clearInterval(interval);
-          }
-
-          const particleCount = 50 * (timeLeft / duration);
-
-          confetti({
-            ...defaults,
-            particleCount,
-            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-          });
-          confetti({
-            ...defaults,
-            particleCount,
-            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-          });
-        }, 250);
-      }
-    }
-  }, [result]);
+  useConfetti(percentage);
 
   if (!result) {
     return (
@@ -59,35 +26,7 @@ export default function ResultsScreen() {
     );
   }
 
-  const percentage = Math.round((result.score / result.total) * 100);
-
-  const getTheme = () => {
-    if (percentage === 100)
-      return {
-        gradient: "rgba(234, 179, 8, 0.15)",
-        itemClass: "text-amber-500/20",
-        items: Array(60).fill("PERFECT"),
-      };
-    if (percentage >= 75)
-      return {
-        gradient: "rgba(34, 197, 94, 0.15)",
-        itemClass: "text-green-500/20",
-        items: Array(60).fill("KEREN"),
-      };
-    if (percentage >= 50)
-      return {
-        gradient: "rgba(59, 130, 246, 0.15)",
-        itemClass: "text-blue-500/20",
-        items: Array(60).fill("SIPP"),
-      };
-    return {
-      gradient: "rgba(239, 68, 68, 0.15)",
-      itemClass: "text-red-500/10",
-      items: Array(60).fill("NT"),
-    };
-  };
-
-  const theme = getTheme();
+  const theme = getResultTheme(percentage);
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
